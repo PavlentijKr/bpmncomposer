@@ -1,4 +1,5 @@
 import asyncio
+import json
 import pathlib
 import sys
 
@@ -35,7 +36,10 @@ def call_endpoint(payload):
     except ValueError as exc:
         return JSONResponse(status_code=422, content={"detail": str(exc)})
     try:
-        return asyncio.run(generate_bpmn(request=request, settings=get_settings()))
+        response = asyncio.run(generate_bpmn(request=request, settings=get_settings()))
+        if hasattr(response, "body"):
+            response.json = lambda: json.loads(response.body.decode())  # type: ignore[attr-defined]
+        return response
     except HTTPException as exc:
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
