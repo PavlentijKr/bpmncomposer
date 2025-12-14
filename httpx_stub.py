@@ -39,5 +39,13 @@ class AsyncClient:
     async def __aexit__(self, exc_type, exc, tb):
         return False
 
-    async def post(self, url: str, headers: Dict[str, str] | None = None, json: Dict[str, Any] | None = None, content: bytes | None = None):
+    async def post(
+        self,
+        url: str,
+        headers: Dict[str, str] | None = None,
+        json: Dict[str, Any] | None = None,
+        content: bytes | None = None,
+        data: Dict[str, Any] | None = None,
+        **kwargs,
+    ):
         raise HTTPError("No network available in stub AsyncClient")

@@ -50,11 +50,19 @@ class GigaChatClient:
         }
         data = {"scope": self.scope}
 
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
+        async with httpx.AsyncClient(timeout=self.timeout, verify=False) as client:
             response = await client.post(self.auth_url, headers=headers, data=data)
         response.raise_for_status()
 
         payload = response.json()
+        logger.info(
+            "gigachat_auth_response",
+            extra={
+                "status": response.status_code,
+                "expires_at": payload.get("expires_at"),
+                "expires_in": payload.get("expires_in"),
+            },
+        )
         token = payload.get("access_token")
         if not token:
             raise GigaChatError("Failed to obtain GigaChat access token")
@@ -96,14 +104,23 @@ class GigaChatClient:
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                 }
-                async with httpx.AsyncClient(timeout=self.timeout) as client:
+                async with httpx.AsyncClient(timeout=self.timeout, verify=False) as client:
                     response = await client.post(
                         f"{self.api_url}/chat/completions",
                         headers=headers,
                         json=payload,
                     )
                 response.raise_for_status()
-                return self._extract_content(response.json())
+                data = response.json()
+                logger.info(
+                    "gigachat_completion_response",
+                    extra={
+                        "status": response.status_code,
+                        "usage": data.get("usage"),
+                        "choices_count": len(data.get("choices", [])),
+                    },
+                )
+                return self._extract_content(data)
             except httpx.HTTPStatusError as exc:
                 last_exc = exc
                 if exc.response.status_code == 401:

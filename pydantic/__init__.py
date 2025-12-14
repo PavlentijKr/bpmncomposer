@@ -50,7 +50,22 @@ class BaseModel(metaclass=BaseModelMeta):
             setattr(self, name, value)
 
     def dict(self):
-        return {k: v for k, v in self.__dict__.items() if not k.startswith("__")}
+        result = {}
+        for key, value in self.__dict__.items():
+            if key.startswith("__"):
+                continue
+            result[key] = self._export(value)
+        return result
+
+    @staticmethod
+    def _export(value):
+        if isinstance(value, BaseModel):
+            return value.dict()
+        if isinstance(value, list):
+            return [BaseModel._export(item) for item in value]
+        if isinstance(value, dict):
+            return {k: BaseModel._export(v) for k, v in value.items()}
+        return value
 
     def json(self):
         return json.dumps(self.dict(), ensure_ascii=False)

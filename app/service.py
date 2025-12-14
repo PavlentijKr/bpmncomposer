@@ -89,7 +89,7 @@ class GenerationService:
 
             debug_attempts.append({
                 "attempt": attempt,
-                "validation_report": json.loads(report.json()),
+                "validation_report": report.dict(),
             })
 
             if not report.errors:
@@ -105,7 +105,7 @@ class GenerationService:
         response = {
             "validated": False,
             "attempts_used": max_attempts,
-            "last_validation_report": json.loads(report.json()),
+            "last_validation_report": report.dict(),
         }
         if request.return_debug:
             response["debug"] = {"attempts": debug_attempts}
