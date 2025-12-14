@@ -23,6 +23,13 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+Copy `.env.example` to `.env` and fill in the required secrets/URLs:
+
+```bash
+cp .env.example .env
+# edit .env to add real tokens and endpoints
+```
+
 Start the API (uvicorn example):
 
 ```bash

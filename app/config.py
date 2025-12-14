@@ -1,5 +1,12 @@
 from functools import lru_cache
+import pathlib
+
+from dotenv import load_dotenv
 from pydantic import BaseSettings, Field, validator
+
+
+_DOTENV_PATH = pathlib.Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(dotenv_path=_DOTENV_PATH, override=False)
 
 
 class Settings(BaseSettings):
