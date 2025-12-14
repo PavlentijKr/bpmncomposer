@@ -18,7 +18,7 @@ class TestClient:
         self.app = app
 
     def post(self, path: str, json: Dict[str, Any]):
-        coro = self.app.__call__("POST", path, json)
+        coro = self.app._dispatch_request("POST", path, json)
         try:
             result = asyncio.get_event_loop().run_until_complete(coro)
         except RuntimeError:
