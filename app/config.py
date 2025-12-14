@@ -11,6 +11,10 @@ load_dotenv(dotenv_path=_DOTENV_PATH, override=False)
 
 class Settings(BaseSettings):
     gigachat_api_url: str = Field("", env="GIGACHAT_API_URL")
+    gigachat_auth_url: str = Field("", env="GIGACHAT_AUTH_URL")
+    gigachat_credentials: str = Field("", env="GIGACHAT_CREDENTIALS")
+    gigachat_scope: str = Field("GIGACHAT_API_CORP", env="GIGACHAT_SCOPE")
+    gigachat_model: str = Field("GigaChat:latest", env="GIGACHAT_MODEL")
     gigachat_token: str = Field("", env="GIGACHAT_TOKEN")
     validator_url: str = Field("http://validator:9000/validate", env="VALIDATOR_URL")
     max_attempts_default: int = Field(3, env="MAX_ATTEMPTS_DEFAULT")

@@ -57,6 +57,10 @@ app = FastAPI()
 def _build_service(settings: Settings) -> GenerationService:
     gigachat_client = GigaChatClient(
         api_url=settings.gigachat_api_url,
+        auth_url=settings.gigachat_auth_url,
+        credentials=settings.gigachat_credentials,
+        scope=settings.gigachat_scope,
+        model=settings.gigachat_model,
         token=settings.gigachat_token,
         timeout=settings.llm_timeout_sec,
     )
