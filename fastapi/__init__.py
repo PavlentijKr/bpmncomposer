@@ -3,7 +3,7 @@ import inspect
 import json
 from typing import Any, Callable, Dict, Tuple
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
 
 from . import status
 from .responses import JSONResponse
@@ -57,10 +57,10 @@ class FastAPI:
                 result = handler(**kwargs)
         except HTTPException as exc:
             return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
-        except ValidationError as exc:
+        except ValueError as exc:
             return JSONResponse(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                content={"detail": exc.errors()},
+                content={"detail": str(exc)},
             )
         return self._ensure_response(result)
 
