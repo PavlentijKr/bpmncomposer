@@ -1,8 +1,12 @@
 from functools import lru_cache
 import pathlib
 
-from dotenv import load_dotenv
-from pydantic import BaseSettings, Field, validator
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - fallback for environments without python-dotenv
+    def load_dotenv(*args, **kwargs):  # type: ignore
+        return False
+from pydantic.v1 import BaseSettings, Field, validator
 
 
 _DOTENV_PATH = pathlib.Path(__file__).resolve().parents[1] / ".env"
